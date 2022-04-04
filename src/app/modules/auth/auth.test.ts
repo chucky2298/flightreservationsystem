@@ -13,14 +13,28 @@ import { generateToken } from "../../config/authentication/two_factor_auth";
 
 describe("Authentication testing", () => {
   let sendEmailStub = null;
-	let userToken = null;
-	let confirmationToken = null;
+  let userToken = null;
+  let confirmationToken = null;
   let twoStepAuthSecretKey = null;
+	let adminToken = null;
 
   beforeAll(async () => {
     await initServer();
     sendEmailStub = stub(mailService, "sendEmail").resolves();
     await clearDatabaseStart().then(() => console.log("cleared"));
+    const createdAdmin = await dal.createUser({
+      content: {
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email().toLowerCase(),
+        password: faker.internet.password(),
+        confirmationLevel: 1,
+        confirmationToken: Crypto.randomBytes(32).toString("hex"),
+        twoFactorAuth: { active: true },
+        isAdmin: true,
+      },
+    });
+    adminToken = `Bearer ${createToken(createdAdmin)}`;
   });
 
   const email = faker.internet.email();
@@ -96,7 +110,7 @@ describe("Authentication testing", () => {
     expect(response.status).toEqual(401);
   });
 
-	it('Confirmation: Success', async () => {
+  it("Confirmation: Success", async () => {
     const user = await dal.findUser({ query: { email: email.toLowerCase() } });
     confirmationToken = user.confirmationToken;
 
@@ -107,7 +121,7 @@ describe("Authentication testing", () => {
     expect(response.status).toEqual(204);
   });
 
-  it('Confirmation: Fail', async () => {
+  it("Confirmation: Fail", async () => {
     const response = await supertest("http://localhost:8000").put(
       `/api/v1/auth/confirmation?token=${confirmationToken}`
     );
@@ -161,7 +175,7 @@ describe("Authentication testing", () => {
     userToken = `Bearer ${response.body.token}`;
   });
 
-	it('Request password: User not found', async () => {
+  it("Request password: User not found", async () => {
     const body = {
       email: "not.found@example.com",
       redirectUrl: faker.internet.url(),
@@ -174,7 +188,7 @@ describe("Authentication testing", () => {
     expect(response.body.details).toEqual(errors.USER_NOT_FOUND);
   });
 
-  it('Request password: Success', async () => {
+  it("Request password: Success", async () => {
     const body = {
       email,
       redirectUrl: faker.internet.url(),
@@ -186,7 +200,7 @@ describe("Authentication testing", () => {
     expect(response.status).toEqual(204);
   });
 
-  it('Reset password: User not found', async () => {
+  it("Reset password: User not found", async () => {
     const body = {
       token: Crypto.randomBytes(32).toString("hex"),
       password: "Ran@0m?pass2",
@@ -222,7 +236,40 @@ describe("Authentication testing", () => {
     expect(passwordsMatch).toEqual(true);
   });
 
-	it('two-factor-auth/initialization: Success', async () => {
+  it("Get all users: Unauthorised (admin only)", async () => {
+    const response = await supertest("http://localhost:8000")
+      .get("/api/v1/users")
+      .set("authorization", userToken);
+
+    expect(response.status).toEqual(403);
+  });
+
+  it("Get all users: Success", async () => {
+    const response = await supertest("http://localhost:8000")
+      .get("/api/v1/users")
+      .set("authorization", adminToken);
+
+    expect(response.status).toEqual(200);
+  });
+
+  it("Get my profile: success", async () => {
+    const response = await supertest("http://localhost:8000")
+      .get("/api/v1/users/profile")
+      .set("authorization", userToken);
+
+    expect(response.status).toEqual(200);
+  });
+
+  it("Update my profile: success", async () => {
+    const response = await supertest("http://localhost:8000")
+      .patch("/api/v1/users/profile")
+      .set("authorization", userToken)
+      .send({ firstName: "newFirstName", lastName: "newLastName" });
+
+    expect(response.status).toEqual(204);
+  });
+
+  it("two-factor-auth/initialization: Success", async () => {
     const response = await supertest("http://localhost:8000")
       .put(`/api/v1/auth/two-factor-auth/initialization`)
       .set("authorization", userToken);
@@ -231,11 +278,10 @@ describe("Authentication testing", () => {
 
     const user = await dal.findUser({ query: { email: email.toLowerCase() } });
 
-
     twoStepAuthSecretKey = user.twoFactorAuth.secret;
   });
 
-  it('two-factor-auth/activation: Success', async () => {
+  it("two-factor-auth/activation: Success", async () => {
     const response = await supertest("http://localhost:8000")
       .put(`/api/v1/auth/two-factor-auth/activation`)
       .set("authorization", userToken)
@@ -250,7 +296,7 @@ describe("Authentication testing", () => {
     expect(updatedUser.twoFactorAuth.active).toEqual(true);
   });
 
-  it('two-factor-auth/verification: Success', async () => {
+  it("two-factor-auth/verification: Success", async () => {
     const response = await supertest("http://localhost:8000")
       .head(
         `/api/v1/auth/two-factor-auth/verification?token=${generateToken(
