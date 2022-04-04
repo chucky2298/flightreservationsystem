@@ -46,7 +46,7 @@ export class GeneralError extends Error {
   }
 }
 export class BadRequest extends GeneralError {
-  constructor(details, logOnly?) {
+  constructor(details?, logOnly?) {
     super(
       400,
       "Bad Request",
@@ -57,7 +57,7 @@ export class BadRequest extends GeneralError {
   }
 }
 export class NotAuthenticated extends GeneralError {
-  constructor(details, logOnly?) {
+  constructor(details?, logOnly?) {
     super(
       401,
       "Not Authenticated",
@@ -68,7 +68,7 @@ export class NotAuthenticated extends GeneralError {
   }
 }
 export class NotAuthorized extends GeneralError {
-  constructor(details, logOnly?) {
+  constructor(details?, logOnly?) {
     super(
       403,
       "Not Authorized / Forbidden",
@@ -79,7 +79,7 @@ export class NotAuthorized extends GeneralError {
   }
 }
 export class NotFound extends GeneralError {
-  constructor(details, logOnly?) {
+  constructor(details?, logOnly?) {
     super(
       404,
       "Not Found",
@@ -90,7 +90,7 @@ export class NotFound extends GeneralError {
   }
 }
 export class UnprocessableEntity extends GeneralError {
-  constructor(details, logOnly?) {
+  constructor(details?, logOnly?) {
     super(
       422,
       "Unprocessable Entity",
@@ -101,7 +101,7 @@ export class UnprocessableEntity extends GeneralError {
   }
 }
 export class InternalError extends GeneralError {
-  constructor(details, logOnly?) {
+  constructor(details?, logOnly?) {
     super(
       500,
       "Internal Server Error",
