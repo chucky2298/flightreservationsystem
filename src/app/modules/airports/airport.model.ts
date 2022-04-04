@@ -13,18 +13,47 @@ import dbTables from '../../constants/db_tables';
  *           type: string
  *         name:
  *           type: string
- *         city:
- *           type: string
+ *         adress:
+ *           type: object
+ *           properties:
+ *             street:
+ *               type: string
+ *             zipcode:
+ *               type: number
+ *             city:
+ *               type: string
+ *             country:
+ *               type: string
  */
 
+const adress = new Mongoose.Schema(
+  {
+    street: {
+      type: Mongoose.Schema.Types.String,
+      required: true,
+    },
+    zipcode: {
+      type: Mongoose.Schema.Types.Number,
+      required: true
+    },
+    city: {
+      type: Mongoose.Schema.Types.String,
+      required: true
+    },
+    country: {
+      type: Mongoose.Schema.Types.String,
+      required: true
+    }
+  }
+);
 const schema = new Mongoose.Schema(
   {
     name: {
       type: Mongoose.Schema.Types.String,
       required: true,
     },
-    city: {
-      type: Mongoose.Schema.Types.String,
+    adress: {
+      type: adress,
       required: true
     }
   },

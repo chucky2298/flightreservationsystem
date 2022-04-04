@@ -16,10 +16,12 @@ describe("Authentication testing", () => {
   let userToken = null;
   let confirmationToken = null;
   let twoStepAuthSecretKey = null;
-	let adminToken = null;
+  let adminToken = null;
 
   beforeAll(async () => {
     await initServer();
+    console.log("Auth");
+
     sendEmailStub = stub(mailService, "sendEmail").resolves();
     await clearDatabaseStart().then(() => console.log("cleared"));
     const createdAdmin = await dal.createUser({

@@ -24,6 +24,4 @@ export const clearDatabaseEnd = async () => {
 		const collection = collections[key];
 		await collection.deleteMany({});
   }
-	await Mongoose.connection.dropDatabase();
-  await Mongoose.connection.close();
 };
