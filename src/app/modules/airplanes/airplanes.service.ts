@@ -94,4 +94,6 @@ export const deleteAirplane = async ({ user, airplaneId }) => {
   if (!deletedAirplane) {
     throw new NotFound();
   }
+
+	await dal.deleteFlights(airplaneId);
 };

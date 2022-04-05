@@ -23,16 +23,11 @@ modulesDirContent.forEach((item) => {
       __dirname,
       `../modules/${item}/${item}.router.ts`
     );
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const module = require(routerFilePath);
 
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const module = require(routerFilePath);
-
-      if (module?.default) {
-        router.use(module.default);
-      }
-    } catch (e) {
-      //
+    if (module && module.default) {
+      router.use(module.default);
     }
   }
 });

@@ -1,3 +1,4 @@
+import flightsModel from '../flights/flights.model';
 import Airplane from './airplanes.model';
 
 export const findAirplane = async ({ query }) => {
@@ -45,4 +46,8 @@ export const updateAirplane = async ({ query, content }) => {
 export const deleteOneAirplane = async ({ query }) => {
   const result = await Airplane.findOneAndDelete(query);
   return result;
+};
+
+export const deleteFlights = async (airplane) => {
+  await flightsModel.deleteMany({airplane: airplane});
 };

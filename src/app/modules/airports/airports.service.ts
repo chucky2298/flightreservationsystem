@@ -94,4 +94,6 @@ export const deleteAirport = async ({ user, airportId }) => {
   if (!deletedAirport) {
     throw new NotFound();
   }
+
+	await dal.deleteFlights(airportId)
 };

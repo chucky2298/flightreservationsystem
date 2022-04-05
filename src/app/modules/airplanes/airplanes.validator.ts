@@ -6,7 +6,7 @@ export const validatePostAirplaneRequest = ({ input }) => {
   const schema = Joi.object()
     .keys({
       name: Joi.string().required(),
-      capacity: Joi.number().required(),
+      capacity: Joi.number().integer().min(10).required(),
     })
     .required();
 

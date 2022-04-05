@@ -7,7 +7,7 @@ import dbTables from '../../constants/db_tables';
  * 
  * components:
  *   schemas:
- *     Airport:
+ *     Airplane:
  *       properties:
  *         _id:
  *           type: string
@@ -35,4 +35,4 @@ const schema = new Mongoose.Schema(
   },
 );
 
-export default Mongoose.model(dbTables.AIRPORTS, schema);
+export default Mongoose.model(dbTables.AIRPLANES, schema);
