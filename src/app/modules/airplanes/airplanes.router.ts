@@ -27,10 +27,13 @@ const BASE_ROUTE = `/airplanes`;
  *               required:
  *                 - name
  *                 - capacity
+ *                 - firstClassSeats
  *               properties:
  *                 name:
  *                   type: string
  *                 capacity:
+ *                   type: number
+ *                 firstClassSeats:
  *                   type: number
  *       responses:
  *         201:
@@ -52,7 +55,7 @@ const BASE_ROUTE = `/airplanes`;
  *               schema:
  *                 $ref: "#/components/schemas/Error"
  *               examples:
- *                 authorExists:
+ *                 airplaneExists:
  *                   value:
  *                     code: ckgjkxvgl000431pp4xlpew2g
  *                     name: Unprocessable Entity
@@ -176,6 +179,8 @@ router
  *                   type: string
  *                 capacity:
  *                   type: number
+ *                 firstClassSeats:
+ *                   type: number
  *       responses:
  *         204:
  *           description: Airplane updated successfully.
@@ -194,7 +199,7 @@ router
  *               schema:
  *                 $ref: "#/components/schemas/Error"
  *               examples:
- *                 authorExists:
+ *                 airplaneExists:
  *                   value:
  *                     code: ckgjkxvgl000431pp4xlpew2g
  *                     name: Unprocessable Entity

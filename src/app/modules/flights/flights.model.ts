@@ -25,6 +25,10 @@ import dbTables from '../../constants/db_tables';
  *           type: string
  *         company:
  *           type: string
+ *         price:
+ *           type: string
+ *         firstClassPrice:
+ *           type: number
  *         seatsReserved:
  *           type: array
  *           items:
@@ -61,10 +65,18 @@ const schema = new Mongoose.Schema(
       type: Mongoose.Schema.Types.String,
       required: true,
     },
+    price: {
+      type: Mongoose.Schema.Types.Number,
+      required: true,
+    },
+    firstClassPrice: {
+      type: Mongoose.Schema.Types.Number,
+      required: true,
+    },
     seatsReserved: [
       {
-          type: Mongoose.Schema.Types.Number,
-          required: true,
+        type: Mongoose.Schema.Types.Number,
+        required: true,
       },
     ],
   },

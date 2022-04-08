@@ -6,7 +6,7 @@ import * as dal from "../auth/auth.dal";
 import Crypto from "crypto";
 import { initServer } from "../../..";
 
-describe("airplanes testing", () => {
+describe("Flights testing", () => {
   let adminToken = null;
   let userToken = null;
   let createdUser = null;

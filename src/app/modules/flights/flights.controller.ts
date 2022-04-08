@@ -48,7 +48,18 @@ export const patchReservation = async (req, res, next) => {
     await service.updateReservation({
       FlightId: req.params.id,
       requestBody: req.body,
-      user: req.user,
+    });
+    res.sendStatus(204);
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const cancelReservation = async (req, res, next) => {
+  try {
+    await service.cancelReservation({
+      FlightId: req.params.id,
+      requestBody: req.body,
     });
     res.sendStatus(204);
   } catch (e) {

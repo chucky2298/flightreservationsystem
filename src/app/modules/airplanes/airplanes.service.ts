@@ -19,18 +19,19 @@ export const createAirplane = async ({ requestBody, user }) => {
     throw new UnprocessableEntity("Airplane name exists");
   }
 
+	if (requestBody.firstClassSeats > requestBody.capacity){
+		throw new UnprocessableEntity("First class seats are more than airplane capacity");
+	}
+
   const createdAirplane = await dal.createAirplane({ content: requestBody });
   return createdAirplane;
 };
 
 
-export const readAirplanes = async ({ requestParams }) => {
+export const readAirplanes = async () => {
   const query = {};
-  const projection = requestParams?.fields
-    ? requestParams.fields.split(",")
-    : ["name", "capacity"];
 
-  const airplane = await dal.findAirplanes({ query, projection });
+  const airplane = await dal.findAirplanes({ query });
   return airplane;
 };
 

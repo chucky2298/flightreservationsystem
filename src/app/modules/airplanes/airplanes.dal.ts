@@ -23,8 +23,8 @@ export const findAirplane = async ({ query }) => {
   return result;
 };
 
-export const findAirplanes = async ({ query, projection }) => {
-  const result = await Airplane.find(query, projection);
+export const findAirplanes = async ({ query }) => {
+  const result = await Airplane.find(query);
   return result;
 };
 

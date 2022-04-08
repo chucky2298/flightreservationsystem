@@ -7,6 +7,7 @@ export const validatePostAirplaneRequest = ({ input }) => {
     .keys({
       name: Joi.string().required(),
       capacity: Joi.number().integer().min(10).required(),
+      firstClassSeats: Joi.number().integer().min(1).required(),
     })
     .required();
 
@@ -21,7 +22,8 @@ export const validatePatchAirplaneRequest = ({ input }) => {
   const schema = Joi.object()
     .keys({
       name: Joi.string().required(),
-      capacity: Joi.number().required(),
+      capacity: Joi.number().integer().min(10).required(),
+      firstClassSeats: Joi.number().integer().min(1).required(),
     })
     .required();
 

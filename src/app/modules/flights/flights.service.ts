@@ -52,9 +52,8 @@ export const updateFlight = async ({ FlightId, requestBody, user }) => {
   });
 };
 
-export const updateReservation = async ({ FlightId, requestBody, user }) => {
+export const updateReservation = async ({ FlightId, requestBody }) => {
   validator.validatePatchReservationRequest({ input: requestBody });
-  authorization.authorizeWriteRequest({ user });
 
   const Flight = await dal.findFlight({
     query: { equal: { _id: FlightId } },
@@ -89,6 +88,43 @@ export const updateReservation = async ({ FlightId, requestBody, user }) => {
   });
 };
 
+export const cancelReservation = async ({ FlightId, requestBody }) => {
+  validator.validatePatchReservationRequest({ input: requestBody });
+
+  const Flight = await dal.findFlight({
+    query: { equal: { _id: FlightId } },
+  });
+
+  if (!Flight) {
+    throw new NotFound();
+  }
+
+  const Airplane = await airplaneDal.findAirplane({
+    query: { equal: { _id: Flight.airplane } },
+  });
+
+	if (requestBody.seatNumber > Airplane.capacity) {
+    throw new UnprocessableEntity("Seat number is over airplane capacity");
+  }
+
+	const seatsReserved = Flight.seatsReserved;
+
+	if (!seatsReserved.includes(requestBody.seatNumber)) {
+    throw new UnprocessableEntity("Seat isn't reserved");
+  }
+
+	seatsReserved.forEach((element, index) => {
+    if (element == requestBody.seatNumber) delete seatsReserved[index];
+  });
+	const content = {
+		seatsReserved: seatsReserved,
+	}
+
+  await dal.updateFlight({
+    query: { _id: FlightId },
+    content: content,
+  });
+};
 
 export const deleteFlight = async ({ user, FlightId }) => {
 	authorization.authorizeWriteRequest({ user });
@@ -99,4 +135,6 @@ export const deleteFlight = async ({ user, FlightId }) => {
   if (!deletedFlight) {
     throw new NotFound();
   }
+
+	dal.deleteBookings(FlightId);
 };

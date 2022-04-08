@@ -31,6 +31,8 @@ const BASE_ROUTE = `/flights`;
  *                 - arrivalDate
  *                 - airplane
  *                 - company
+ *                 - price
+ *                 - firstClassPrice
  *               properties:
  *                 departureAirport:
  *                   type: string
@@ -46,6 +48,10 @@ const BASE_ROUTE = `/flights`;
  *                   type: string
  *                 company:
  *                   type: string
+ *                 price:
+ *                   type: number
+ *                 firstClassPrice:
+ *                   type: number
  *       responses:
  *         201:
  *           description: Flight created successfully.
@@ -192,6 +198,10 @@ router
  *                   type: string
  *                 company:
  *                   type: string
+ *                 price:
+ *                   type: number
+ *                 firstClassPrice:
+ *                   type: number
  *       responses:
  *         204:
  *           description: Flight updated successfully.
@@ -226,7 +236,7 @@ router
  * @openapi
  * 
  * paths:
- *   /flights/seats/{id}:
+ *   /flights/reserveseat/{id}:
  *     patch:
  *       security:
  *         - bearerAuth: []
@@ -270,10 +280,66 @@ router
  */
 
 router
-  .route(`${BASE_ROUTE}/seats/:id`)
+  .route(`${BASE_ROUTE}/reserveseat/:id`)
   .patch(
     Passport.authenticate("jwt", { session: false }),
     controller.patchReservation
+  );
+
+/**
+ * Cancel seat.
+ * 
+ * @openapi
+ * 
+ * paths:
+ *   /flights/cancelseat/{id}:
+ *     patch:
+ *       security:
+ *         - bearerAuth: []
+ *       tags:
+ *         - Flights
+ *       summary: Cancel seat
+ *       description: Cancel a seat in the flight.
+ *       parameters:
+ *         - name: id
+ *           in: path
+ *           description: Flight Id
+ *           required: true
+ *           schema:
+ *             type: string
+ *       requestBody:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 seatNumber:
+ *                   type: number
+ *       responses:
+ *         204:
+ *           description: Seat canceled successfully.
+ *         400:
+ *           $ref: "#/components/responses/400"
+ *         401:
+ *           $ref: "#/components/responses/401"
+ *         403:
+ *           $ref: "#/components/responses/403"
+ *         404:
+ *           $ref: "#/components/responses/404"
+ *         422:
+ *           description: Unprocessable Entity
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 $ref: "#/components/schemas/Error"
+ *         500:
+ *           $ref: "#/components/responses/500"
+ */
+
+router
+  .route(`${BASE_ROUTE}/cancelseat/:id`)
+  .patch(
+    Passport.authenticate("jwt", { session: false }),
+    controller.cancelReservation
   );
 
 /**

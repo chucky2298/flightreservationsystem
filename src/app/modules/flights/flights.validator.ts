@@ -9,6 +9,8 @@ export const validatePostFlightRequest = ({ input }) => {
       arrivalAirport: Joi.string().required(),
       airplane: Joi.string().required(),
       company: Joi.string().required(),
+      price: Joi.number().integer().min(1).required(),
+      firstClassPrice: Joi.number().integer().min(1).required(),
       departureDate: Joi.date().required(),
       arrivalDate: Joi.date().required(),
     })
@@ -28,6 +30,8 @@ export const validatePatchFlightRequest = ({ input }) => {
       arrivalAirport: Joi.string().required(),
       airplane: Joi.string().required(),
       company: Joi.string().required(),
+      price: Joi.number().integer().min(1).required(),
+      firstClassPrice: Joi.number().integer().min(1).required(),
       departureDate: Joi.date().required(),
       arrivalDate: Joi.date().required(),
     })

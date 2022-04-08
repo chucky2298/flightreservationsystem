@@ -15,6 +15,8 @@ import dbTables from '../../constants/db_tables';
  *           type: string
  *         capacity:
  *           type: number
+ *         firstClassSeats:
+ *           type: number
  * 
  */
 
@@ -25,6 +27,10 @@ const schema = new Mongoose.Schema(
       required: true,
     },
     capacity: {
+      type: Mongoose.Schema.Types.Number,
+      required: true,
+    },
+    firstClassSeats: {
       type: Mongoose.Schema.Types.Number,
       required: true,
     }

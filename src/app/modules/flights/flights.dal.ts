@@ -1,3 +1,4 @@
+import bookingsModel from '../bookings/bookings.model';
 import Flight from './flights.model';
 
 export const findFlight = async ({ query }) => {
@@ -45,4 +46,8 @@ export const updateFlight = async ({ query, content }) => {
 export const deleteOneFlight = async ({ query }) => {
   const result = await Flight.findOneAndDelete(query);
   return result;
+};
+
+export const deleteBookings = async (flight) => {
+  await bookingsModel.deleteMany({ flight: flight });
 };

@@ -14,7 +14,7 @@ export const postAirplane = async (req, res, next) => {
 
 export const getAirplanes = async (req, res, next) => {
   try {
-    const result = await service.readAirplanes({ requestParams: req.query });
+    const result = await service.readAirplanes();
     res.status(200).json(result);
   } catch (e) {
     next(e);
